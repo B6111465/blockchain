@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    header {
+
+        text-align: center;
+        font-size: 45px;
+        width: 100%;
+        height: 100px;
+        animation-name: head;
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes head {
+        0% {
+            background-color: rgb(250, 135, 4);
+        }
+
+        20% {
+            background-color: rgb(228, 113, 20);
+        }
+
+        40% {
+            background-color: rgb(230, 193, 31);
+        }
+
+        60% {
+            background-color: rgb(228, 200, 41);
+        }
+
+        80% {
+            background-color: rgb(151, 197, 22);
+        }
+
+        100% {
+            background-color: rgb(228, 78, 215);
+        }
+    }
+</style>
+
+<head>
+    <header><b>&#9749; オバルチンラバーズショップ &#9749;</b></header>
+    <script src="./node_modules/web3/dist/web3.min.js">
+    </script>
+
+</head>
+
+<body bgcolor="#ff33ff">
+    <embed src="theme music\bg_music.mp3" hidden="true"></embed>
+    <center>
+        <table border="0" width="100%">
+            <div>
+                <td>
+
+                    <h3>
+                        オバルチン愛好家ショップの注文履歴
+                        &#128512; &#128507; &#128510;
+                    </h3>
+                    <table class="center" id="TableOrder" border="1" width="650px" align="center">
+                        <tr bgcolor="orange">
+                            <td><label class="cafe"><b>ลำดับ</b></label></td>
+                            <td><label class="cafe"><b>วัน-เดือน-ปี เวลา</b></label></td>
+                            <td><label class="cafe"><b>ของที่สั่ง</b></label></td>
+                            <td><label class="cafe"><b>ผู้สั่ง</b></label></td>
+                        </tr>
+                    </table>
+                </td>
+            </div>
+            <td>
+                <table border="1" width="700px">
+                    <tr bgcolor="orange">
+                        <th><b>スナック</b></th>
+                        <th>水（オバンティンのみ</b></th>
+                    </tr>
+                    <tr align="center" bgcolor="#cc33ff">
+                        <td><img src="\image\ขนมปังภูเขาไฟ.jpg" height="150" width="200">
+                            <br>ขนมปังภูเขาไฟ<br>
+                            <button id="order1" value="ขนมปังภูเขาไฟ" name="ขนมปังภูเขาไฟ">0.00006 eth</button>
+                        <td><img src="\image\ภูเขาไฟ.jpg" height="150" width="200">
+                            <br>โอวันตินภูเขาไฟ<br>
+                            <button id="order3" value="โอวันตินภูเขาไฟ" name="โอวันตินภูเขาไฟ">0.001 eth</button>
+                        </td>
+                    </tr>
+                    <tr align="center" bgcolor="#cc33ff">
+                        <td><img src="\image\ปังติน.jpg" height="150" width="200">
+                            <br>ปังเย็นโอวันติน<br>
+                            <button id="order2" value="ปังเย็นโอวันติน" name="ปังเย็นโอวันติน">0.069 eth</button>
+                        <td><img src="\image\โอวันตินปกติ.jpg" height="150" width="200">
+                            <br>โอวันตินคลาสสิค<br>
+                            <button id="order5" value="โอวันตินคลาสสิค" name="โอวันตินคลาสสิค">0.0001 eth</button>
+                        </td>
+                    </tr>
+                    <tr align="center" bgcolor="#cc33ff">
+                        <td><img src="\image\แข็งติน.jpg" height="150" width="200">
+                            <br>น้ำแข็งใสโอวันติน<br>
+                            <button id="order4" value="น้ำแข็งใสโอวันติน" name="น้ำแข็งใสโอวันติน">0.022 eth</button>
+                        <td><img src="\image\โอวันตินผสมไมโล.jpg" height="150" width="200">
+                            <br>โอวันตินผสมไมโล<br>
+                            <button id="order6" value="โอวันตินผสมไมโล" name="โอวันตินผสมไมโล">0.01 eth</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+
+        </table>
+        <hr width="100%" color="blue">
+        <marquee behavior="scroll" direction="left" scrollamount="60" color="blue"> <b>
+                &#9917; &#9924; Introduction to Blockchain Technology
+                B6111465 Pakawat Penpoom &#9924; &#9917;<br>
+            </b>
+        </marquee>
+
+    </center>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js">
+    </script>
+    <script>
+        function insertData(n, o) {
+            var name = n;
+            var address = o;
+            var dt = new Date();
+            document.getElementById("insertionPoint").innerHTML += "<tr><td>" + dt.toLocaleTimeString() + "</td><td>" +
+                name + "</td><td>" + address + "</td><tr>";
+        }
+    </script>
+    <script>
+        if (typeof web3 !== 'undefined') {
+            // this statement is executed if you are using 
+            // MetaMask 
+            async function enableAccounts() {
+                await ethereum.enable()
+            }
+            enableAccounts();
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(
+                new Web3.providers.HttpProvider(
+                    "http://localhost:8545"));
+        }
+
+        let abi = [{
+                "constant": false,
+                "inputs": [{
+                    "name": "name",
+                    "type": "string"
+                }],
+                "name": "GetOrder",
+                "outputs": [],
+                "payable": true,
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [{
+                        "indexed": false,
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "name": "text",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "name": "datetime",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "name": "hash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "OrderAdded",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [{
+                        "indexed": false,
+                        "name": "from",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "name": "text",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "name": "reason",
+                        "type": "string"
+                    }
+                ],
+                "name": "OrderError",
+                "type": "event"
+            },
+            {
+                "constant": true,
+                "inputs": [{
+                    "name": "index",
+                    "type": "uint256"
+                }],
+                "name": "getAddress",
+                "outputs": [{
+                    "name": "",
+                    "type": "address"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [{
+                    "name": "index",
+                    "type": "uint256"
+                }],
+                "name": "getName",
+                "outputs": [{
+                    "name": "",
+                    "type": "string"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [],
+                "name": "getOrderCount",
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [{
+                    "name": "index",
+                    "type": "uint256"
+                }],
+                "name": "getTimestamp",
+                "outputs": [{
+                    "name": "",
+                    "type": "uint256"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+        var contract = web3.eth.contract(abi);
+        var myContract = contract.at(
+            '0x7023EbcF5e002e700F37Ec559d1d32C9eBa0390D');
+
+        var completeEvent =
+            myContract.OrderAdded();
+
+        var refreshtable = false;
+
+        completeEvent.watch(function (error, result) {
+            if (!error) {
+                //$("#result").html("Got it");               
+                if (result.args.from == web3.eth.defaultAccount) {
+                    $("#result").html("Order >> " + result.args.text);
+                    if (refreshtable == true) {
+                        insertData(result.args.text, result.args.from);
+                        refreshtable = false;
+                    }
+                }
+            }
+        });
+
+        var errorEvent =
+            myContract.OrderError();
+
+        errorEvent.watch(function (error, result) {
+            if (!error) {
+                if (result.args.from ==
+                    web3.eth.defaultAccount) {
+                    $("#result").html(
+                        "Error. <br/> Name: " +
+                        result.args.text +
+                        "<br/> Reason: " + result.args.reason);
+                }
+            }
+        });
+
+        $("#order1").click(function () {
+            SendOrder(6000000000, "ขนมปังภูเขาไฟ")
+        });
+        $("#order3").click(function () {
+            SendOrder(10000000000000, "โอวันตินภูเขาไฟ")
+        });
+        $("#order2").click(function () {
+            SendOrder(69000000000000000, "ปังเย็นโอวันติน")
+        });
+        $("#order5").click(function () {
+            SendOrder(100000000000, "โอวันตินคลาสสิค")
+        });
+        $("#order4").click(function () {
+            SendOrder(22000000000000000, "น้ำแข็งใสโอวันติน")
+        });
+
+        $("#order6").click(function () {
+            SendOrder(1000000000000000, "โอวันตินผสมไมโล")
+        });
+
+        async function GetvalueOrder() {
+
+            var timestamp;
+            var ordername;
+            var owner;
+            var i = 0;
+
+            await ResetTable();
+            myContract.getOrderCount((error, result) => {
+                if (!error) {
+                    setTimeout(function () {
+                        selectOrder(parseInt(result.toString()));
+                    }, 500);
+                } else
+                    console.error(error);
+            });
+
+            function selectOrder(index) {
+                if (index > 0) {
+                    myContract.getTimestamp(i, (error, result) => {
+                        if (!error) {
+                            timestamp = ConvertTimestamp(result);
+                            myContract.getName(i, (error, result) => {
+                                if (!error) {
+                                    ordername = result.toString();
+                                    myContract.getAddress(i, (error, result) => {
+                                        if (!error) {
+                                            owner = result.toString();
+                                            if (i < index) {
+                                                listOrder(timestamp, ordername, owner);
+                                                i++;
+                                                selectOrder(index);
+                                            }
+                                        } else
+                                            console.error(error);
+                                    });
+                                } else
+                                    console.error(error);
+                            });
+                        } else
+                            console.error(error);
+                    });
+                }
+            }
+
+        }
+
+        function SendOrder(value, ordername) {
+            refreshtable = true;
+            myContract.GetOrder(ordername, {
+                gas: 300000,
+                from: web3.eth.accounts[0],
+                value: value
+            }, (error, result) => {
+                $("#result").html("Order pending confirmation.....");
+            });
+        }
+
+        function listOrder(timestamp, ordername, owner, i) {
+            var queueOrder = document.getElementById("TableOrder");
+
+            var r_count = queueOrder.rows.length;
+            console.log("r_count");
+            console.log(r_count);
+            var row = queueOrder.insertRow(r_count);
+
+            row.insertCell(0).innerHTML = r_count;
+            row.insertCell(1).innerHTML = timestamp;
+            row.insertCell(2).innerHTML = ordername;
+            row.insertCell(3).innerHTML = owner;
+        }
+
+        function ResetTable() {
+            var queueOrder = document.getElementById("TableOrder");
+
+            while (queueOrder.rows.length > 1) {
+                queueOrder.deleteRow(queueOrder.rows.length - 1);
+            }
+        }
+
+        function ConvertTimestamp(timestamp) {
+            var mon = ["January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+            ];
+
+            var timeconvert = new Date(timestamp * 1000)
+
+            return (timeconvert.getDate().toString() + " " +
+                mon[timeconvert.getMonth() + 1] + " " +
+                timeconvert.getFullYear().toString() + "   " +
+                (timeconvert.getHours() % 10 == timeconvert.getHours() ? "0" +
+                    timeconvert.getHours().toString() : timeconvert.getHours().toString()) + ":" +
+                (timeconvert.getMinutes() % 10 == timeconvert.getMinutes() ? "0" +
+                    timeconvert.getMinutes().toString() : timeconvert.getMinutes().toString())
+            )
+        }
+
+        window.onload = GetvalueOrder();
+    </script>
+</body>
+
+</html>
